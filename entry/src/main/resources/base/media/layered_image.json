@@ -1,0 +1,7 @@
+{
+  "layered-image":
+  {
+    "background" : "$media:icon_startwindow",
+    "foreground" : "$media:icon_startwindow"
+  }
+}
