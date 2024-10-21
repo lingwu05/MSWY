@@ -1,0 +1,55 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\lingwu\\.ohos\\config\\default_MSWY_qASHt20hxOvZPAA-jiU_cX6Pc_cmup9hVPf2stpX1hQ=.cer",
+          "storePassword": "0000001ADD63D14DE724C74D9DF4D849F6FAAC18FB5877A41CA1289EEC0AC53922A9D2C27CBBBA80E739",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001AD1AD52BE1FDCA07DB3CF650F32AA4BE741F7C5A1C6C6A8ECB10C78C68AF69EA22ACE89AB9092",
+          "profile": "C:\\Users\\lingwu\\.ohos\\config\\default_MSWY_qASHt20hxOvZPAA-jiU_cX6Pc_cmup9hVPf2stpX1hQ=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\lingwu\\.ohos\\config\\default_MSWY_qASHt20hxOvZPAA-jiU_cX6Pc_cmup9hVPf2stpX1hQ=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
