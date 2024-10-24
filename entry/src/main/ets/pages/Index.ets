@@ -1,21 +1,51 @@
-import {Home} from '../views/home/Index'
-import {Interview} from '../views/interview/Index'
-import {Project} from '../views/project/Index'
-import {Me} from '../views/me/Index'
+import {Home} from './Home'
+import {Interview} from './Interview'
+import {Project} from './Project'
+import {Mine} from './Mine'
 
+interface ITarBarItem {
+  icon: Resource
+  activeIcon: Resource
+  name: string
+}
 
 @Entry
 @Component
 struct Index {
+  @StorageProp('bottomHeight') bottomHeight: number = 0
+  tarBarList: ITarBarItem[] = [
+    {
+      icon: $r('app.media.tabbar_home'),
+      activeIcon: $r('app.media.tabbar_home_fill'),
+      name: '首页'
+    },
+    {
+      icon: $r('app.media.tabbar_project'),
+      activeIcon: $r('app.media.tabbar_project_fill'),
+      name: '项目'
+    },
+    {
+      icon: $r('app.media.tabbar_interview'),
+      activeIcon: $r('app.media.tabbar_interview_fill'),
+      name: '面经'
+    },
+    {
+      icon: $r('app.media.tabbar_mine'),
+      activeIcon: $r('app.media.tabbar_mine_fill'),
+      name: '我的'
+    }
+  ]
+
   @State currentTabBarIndex: number = 0
 
-  @Builder tabBarBuild(img: Resource, selectedImg: Resource, text: string, index: number) {
-    Column() {
-      Image(this.currentTabBarIndex == index ? selectedImg : img)
-        .width(28)
-      Text(text)
-        .fontSize(10)
-        .fontColor(this.currentTabBarIndex == index ? '#1f1f1f' : '#919193')
+  @Builder tabBarBuild(item: ITarBarItem, index: number) {
+    Column({space: 5}) {
+      Image(this.currentTabBarIndex == index ? item.activeIcon : item.icon)
+        .width(24)
+        .aspectRatio(1)
+      Text(item.name)
+        .fontSize(12)
+        .fontColor(this.currentTabBarIndex == index ? $r('app.color.black') : $r('app.color.common_gray_01'))
     }
     .width('100%')
     .height('100%')
@@ -24,28 +54,26 @@ struct Index {
 
   build() {
     Tabs({
-      barPosition: BarPosition.End
+      barPosition: BarPosition.End,
+      index: this.currentTabBarIndex
     }) {
-      TabContent() {
-        Home()
-      }
-      .tabBar(this.tabBarBuild($r('app.media.tabbar_home'), $r('app.media.tabbar_home_fill'), '首页', 0))
-
-      TabContent() {
-        Project()
-      }
-      .tabBar(this.tabBarBuild($r('app.media.tabbar_project'), $r('app.media.tabbar_project_fill'), '项目', 1))
-
-      TabContent() {
-        Interview()
-      }
-      .tabBar(this.tabBarBuild($r('app.media.tabbar_interview'), $r('app.media.tabbar_interview_fill'), '面经', 2))
-
-      TabContent() {
-        Me()
-      }
-      .tabBar(this.tabBarBuild($r('app.media.tabbar_mine'), $r('app.media.tabbar_mine_fill'), '我的', 3))
-
+      ForEach(this.tarBarList, (item: ITarBarItem, index) => {
+        TabContent() {
+          if (index == 0) {
+            Home()
+          }
+          else if (index == 1) {
+            Project()
+          }
+          else  if (index == 2) {
+            Interview()
+          }
+          else {
+            Mine()
+          }
+        }
+        .tabBar(this.tabBarBuild(item, index))
+      })
     }
     .height('100%')
     .width('100%')
@@ -54,5 +82,7 @@ struct Index {
     })
     .animationDuration(0)
     .scrollable(false)
+    .divider({ strokeWidth: 0.5, color: $r('app.color.common_gray_border') })
+    .margin({ bottom: this.bottomHeight })
   }
 }

@@ -9,6 +9,7 @@ interface ProjectItem {
 
 @Preview
 @Component
+@Entry
 export struct Project {
   @State projects: ProjectItem[] = [
     {

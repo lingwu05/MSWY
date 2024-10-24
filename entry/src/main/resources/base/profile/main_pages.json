@@ -5,6 +5,10 @@
     "pages/PrivacyAgreement",
     "pages/UserAgreement",
     "pages/Welcome",
-    "test/Test"
+    "test/Test",
+    "pages/Home",
+    "pages/Interview",
+    "pages/Mine",
+    "pages/Project"
   ]
 }

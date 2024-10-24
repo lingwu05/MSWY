@@ -1,6 +1,6 @@
 import { Clock } from "../common/Clock"
 import { SearchBar } from "../common/SearchBar"
-import  {IQuestionItem, QuestionList} from "./QuestionList"
+import  {IQuestionItem, QuestionList} from "../views/home/QuestionList"
 
 interface IHomeProjectItem {
   title: string
@@ -16,6 +16,7 @@ interface ITagItem {
 }
 
 @Preview
+@Entry
 @Component
 export struct Home {
 

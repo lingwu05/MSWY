@@ -7,8 +7,9 @@ interface Item {
 }
 
 @Preview
+@Entry
 @Component
-export struct Me {
+export struct Mine {
   @State barItems: Item[] = [
     {img: $r('app.media.ic_mine_history'), text: '历史记录'},
     {img: $r('app.media.ic_mine_collect'), text: '我的收藏'},
