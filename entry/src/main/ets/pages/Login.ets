@@ -1,9 +1,25 @@
-import { router } from '@kit.ArkUI';
+import { promptAction, router } from '@kit.ArkUI';
+import { http } from '../common/utils/Index';
+import { User } from '../models';
+import { emitter } from '@kit.BasicServicesKit';
+import { LOGIN_EVENT } from '../constants';
+import { auth } from '../common/utils/Auth';
+
+interface LoginParam {
+  username: string
+  password: string
+}
 
 @Entry
 @Component
 struct Login {
-  @State message: string = 'Hello World';
+  @State loginParam: LoginParam = {
+    username: 'hmheima',
+    password: 'Hmheima%123',
+  }
+
+  @State isAgree: boolean = true
+  @State isVerify: boolean = false
 
   build() {
     Column() {
@@ -13,15 +29,10 @@ struct Login {
           .width(30)
           .aspectRatio(1)
           .onClick(() => {
-            router.replaceUrl({
-              url: 'pages/Index'
-            })
+            router.back()
           })
-        Row() {
-
-        }
-        .layoutWeight(1)
         Blank()
+        .layoutWeight(1)
       }
       .width('100%')
       .margin({
@@ -46,7 +57,7 @@ struct Login {
 
       // 登录区域
       Column({space: 15}) {
-        TextInput({placeholder: '请输入用户名'})
+        TextInput({placeholder: '请输入用户名', text: $$this.loginParam.username})
           .backgroundColor(Color.Transparent)
           .border({
             color: $r('app.color.line_gray'),
@@ -60,7 +71,7 @@ struct Login {
             left: 30,
             right: 30
           })
-        TextInput({placeholder: '请输入密码'})
+        TextInput({placeholder: '请输入密码', text: $$this.loginParam.password})
           .backgroundColor(Color.Transparent)
           .type(InputType.Password)
           .border({
@@ -77,9 +88,12 @@ struct Login {
           })
         Row() {
           Checkbox()
-            .select(true)
+            .select($$this.isAgree)
             .width(15)
             .selectedColor('#f6701a')
+            .onChange((val) => {
+              this.isAgree = val
+            })
           Text('已阅读并同意')
             .fontColor($r('app.color.gray'))
           Text(' 用户协议')
@@ -118,6 +132,42 @@ struct Login {
           ]
         })
         .borderRadius(4)
+        .onClick(async () => {
+          if (this.isVerify) {
+            return
+          }
+          if (!this.loginParam.username || !this.loginParam.password) {
+            promptAction.showToast({message: '请输入用户名或密码'})
+            return
+          }
+          if (!this.isAgree) {
+            promptAction.showToast({message: '请勾选已阅读并同意'})
+            return
+          }
+          try {
+            this.isVerify = true
+            const user = await http.request<User, LoginParam>({
+              url: 'login', method: 'post', data: {
+                username: this.loginParam.username,
+                password: this.loginParam.password
+              }
+            })
+            this.isVerify = false
+            auth.setUser(user)
+            emitter.emit(LOGIN_EVENT)
+            // 有 return_url 就回跳
+            const params = router.getParams() as Record<string, string>
+            if (params?.return_url) {
+              router.replaceUrl({ url: params.return_url, params })
+            } else {
+              router.back()
+            }
+          } catch (e) {
+            this.isVerify = false
+            promptAction.showToast({ message: e.message })
+          }
+
+        })
       }
 
       Column({space: 20}) {

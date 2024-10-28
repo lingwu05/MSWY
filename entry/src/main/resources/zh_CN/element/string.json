@@ -11,6 +11,14 @@
     {
       "name": "EntryAbility_label",
       "value": "面试无忧"
+    },
+    {
+      "name": "SecondAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "SecondAbility_label",
+      "value": "label"
     }
   ]
 }

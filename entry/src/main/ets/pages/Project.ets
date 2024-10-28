@@ -1,5 +1,3 @@
-import { it } from "@ohos/hypium"
-
 interface ProjectItem {
   title: string
   desc: string

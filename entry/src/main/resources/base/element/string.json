@@ -11,6 +11,22 @@
     {
       "name": "EntryAbility_label",
       "value": "面试无忧"
+    },
+    {
+      "name": "padding_normal",
+      "value": "16"
+    },
+    {
+      "name": "padding_small",
+      "value": "6"
+    },
+    {
+      "name": "SecondAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "SecondAbility_label",
+      "value": "label"
     }
   ]
 }

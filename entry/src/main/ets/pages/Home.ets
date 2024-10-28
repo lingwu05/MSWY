@@ -1,6 +1,8 @@
-import { Clock } from "../common/Clock"
-import { SearchBar } from "../common/SearchBar"
-import  {IQuestionItem, QuestionList} from "../views/home/QuestionList"
+import { Clock } from "../common/components/Clock"
+import { SearchBox } from "../common/components/SearchBox"
+import { http, requestClockIn } from "../common/utils/Index"
+import { User } from "../models"
+import {QuestionCategory} from '../views/home/QuestionCategory'
 
 interface IHomeProjectItem {
   title: string
@@ -10,16 +12,11 @@ interface IHomeProjectItem {
   tcolor: string
 }
 
-interface ITagItem {
-  name: string
-  questionList: IQuestionItem[]
-}
-
 @Preview
 @Entry
 @Component
 export struct Home {
-
+  @StorageProp('user') user: User = {} as User
   @State index: number = 0;
   @State hpItems: IHomeProjectItem[] = [
     {
@@ -51,212 +48,7 @@ export struct Home {
       tcolor: '#FE9545'
     },
   ]
-  @State tagsList: ITagItem[] = [
-    {
-      name: 'ArtTS', questionList: [
-      {
-        title: '如何删除Record中的元素',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '如何删除Record中的元素',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '如何删除Record中的元素',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '如何删除Record中的元素',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '如何删除Record中的元素',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-    ]
-    },
-    {
-      name: 'ArtUI', questionList: [
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-    ]
-    },
-    {
-      name: 'JavaScript', questionList: [
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-    ]
-    },
-    {
-      name: 'TypeScript', questionList: [
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-    ]
-    },
-    {
-      name: 'Vue3', questionList: [
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-    ]
-    },
-    {
-      name: 'Harmony Next混合开发', questionList: [
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-      {
-        title: '你知道哪些提高ArtTS性能的写法',
-        tag: '困难',
-        likes: 9999,
-        views: 10000
-      },
-    ]
-    }
-  ]
+
 
   @Builder
   projectCardBuilder(item: IHomeProjectItem) {
@@ -289,54 +81,43 @@ export struct Home {
     .borderRadius(8)
   }
 
-  @Builder
-  tabBarBuilder(item: ITagItem, index: number) {
-    Row() {
-      Stack({ alignContent: Alignment.Bottom }) {
-        Text(item.name)
-          .fontSize(15)
-          .height(43)
-          .fontColor(this.index === index ? Color.Black : Color.Gray)
-        Text()
-          .width(this.index === index ? 20 : 0)
-          .height(2)
-          .backgroundColor(Color.Black)
-          .animation({ duration: this.index === index ? 300 : 0 })
-      }
-      .padding({ left: index === 0 ? 16 : 0})
-    }
-    .padding({ right: this.tagsList.length === index + 1 ? 54 : 16 })
-  }
-
   build() {
     Scroll() {
       Column() {
         // 搜索部分
-        Row({ space: 10 }) {
+        Row({ space: 16 }) {
           Image($r('app.media.ic_scan_code'))
-            .width(30)
-          SearchBar()
-          Clock()
+            .width(24)
+            .aspectRatio(1)
+          SearchBox({layoutWeightValue: 1})
+          Clock({clockCount: this.user.clockinNumbers})
+            .onClick(() => {
+              requestClockIn()
+            })
         }
         .width('100%')
-        .justifyContent(FlexAlign.Center)
-        .margin({ top: 10, bottom: 20 })
+        .height(64)
+        .backgroundColor($r('app.color.common_gray_bg'))
+        .padding({left: $r('app.string.padding_normal'), right: $r('app.string.padding_normal')})
 
         // 项目轮播1
         Swiper() {
-          Image($r('app.media.banner_pj'))
-            .width('100%')
+          ForEach([$r('app.media.banner_pj'), $r('app.media.banner_qa'), $r('app.media.banner_ai')], (item: Resource) => {
+            Image(item)
+              .width('100%')
+              .aspectRatio(2.65)
+              .objectFit(ImageFit.Fill)
+          })
         }
         .indicator( // 设置圆点导航点样式
           new DotIndicator()
-            .itemWidth(15)
-            .itemHeight(5)
-            .selectedItemWidth(20)
-            .selectedItemHeight(5)
+            .itemHeight(4)
+            .selectedItemHeight(4)
             .color(Color.White)
-            .selectedColor('#F3F4F6')
-            .bottom(5))
-        .margin({ left: 20, right: 20 })
+            .selectedColor($r('app.color.white'))
+            .bottom(4))
+        .margin({ left: $r('app.string.padding_normal'), right: $r('app.string.padding_normal')})
+        .autoPlay(true)
 
 
         // 每日一题
@@ -402,37 +183,11 @@ export struct Home {
         .margin({bottom: 10})
 
         // 题目区
-        Stack() {
-          Tabs({index: $$this.index}) {
-            ForEach(this.tagsList, (item: ITagItem, index) => {
-              TabContent() {
-                QuestionList()
-              }
-              .tabBar(this.tabBarBuilder(item, index))
-            })
-          }
-          .barMode(BarMode.Scrollable)
-          .divider({
-            strokeWidth: 1,
-            color: '#F8F8F8'
-          })
-          .height(720)
-          .barHeight(40)
-          .onChange(i => this.index = i)
-          .barBackgroundColor('#FFFFFF')
-
-          Row() {
-            Image($r('app.media.ic_home_filter'))
-              .width(22)
-              .height(44)
-              .objectFit(ImageFit.Contain)
-          }
-          .width(54)
-          .height(40)
-          .justifyContent(FlexAlign.Center)
-          .backgroundColor('#FFFFFF')
-          .position({top: 0, right: 0})
+        Column(){
+          QuestionCategory()
         }
+        .width('100%')
+        .backgroundColor($r('app.color.white'))
       }
       .width('100%')
       .backgroundColor('#F3F4F6')

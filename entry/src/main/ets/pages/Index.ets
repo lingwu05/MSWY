@@ -2,12 +2,16 @@ import {Home} from './Home'
 import {Interview} from './Interview'
 import {Project} from './Project'
 import {Mine} from './Mine'
+import { User } from '../models'
 
 interface ITarBarItem {
   icon: Resource
   activeIcon: Resource
   name: string
 }
+
+// 初始化
+PersistentStorage.persistProp<User>('user', {} as User)
 
 @Entry
 @Component

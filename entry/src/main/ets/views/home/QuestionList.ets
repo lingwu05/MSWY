@@ -1,157 +1,123 @@
-export interface IQuestionItem {
-  title: string
-  tag: string
-  likes: number
-  views: number
-}
+import { QuestionItemComp } from "../../common/components/QuestionItemComp"
+import { http } from "../../common/utils/Index"
+import { PageData, QuestionItem, QuestionListParams, SortType} from "../../models/index"
+import { promptAction } from "@kit.ArkUI"
 
 @Preview
 @Component
 export struct QuestionList {
-  @Prop list: IQuestionItem[] = [
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
-    {
-      title: '如何删除Record中的元素',
-      tag: '困难',
-      likes: 9999,
-      views: 10000
-    },
+  @Prop isRefreshing: boolean = false
+  @Prop isLoading: boolean = false
+  @Prop isFinish: boolean = false
+  @Prop list: QuestionItem[] = []
 
-  ]
+  @Prop typeId: number = 0
+  @Prop sort: SortType = SortType.Default
+  @State page: number = 1
 
-  @Builder questionBuilder(item: IQuestionItem) {
-    Column({space: 10}) {
-      Row({space: 5}) {
-        Text(item.tag)
-          .backgroundColor('#F3F4F6')
-          .fontColor('#F08641')
-          .padding(5)
-          .fontSize(12)
-        Text(item.title)
-          .fontSize(15)
-          .fontWeight(500)
-      }
-      .width('100%')
-      Text('点赞 ' + item.likes + '   |   浏览 ' + item.views)
-        .fontColor('#B1B1B1')
-        .fontSize(13)
-        .width('100%')
-    }
-    .width('100%')
-    .height(80)
-    .borderWidth({
-      bottom: 1
-    })
-    .borderColor('#F6F6F6')
-    .padding({
-      bottom: 10,
-      top: 10,
-      left:20
+  getQuestionList(): Promise<PageData<QuestionItem>> {
+    return http.request<PageData<QuestionItem>>({
+      url: 'question/list',
+      params: {
+        type: this.typeId,
+        questionBankType: 10,
+        sort: this.sort,
+        page: this.page,
+        pageSize: 10
+      } as QuestionListParams
     })
   }
 
+  @Builder loadingMoreBuilder() {
+    ListItem() {
+      if (this.isLoading) {
+        Row({space: 5}) {
+          LoadingProgress()
+            .width(20)
+          Text('正在加载...')
+            .fontSize(14)
+            .fontColor($r('app.color.common_gray_03'))
+        }
+        .justifyContent(FlexAlign.Center)
+        .width('100%')
+      }
+      else if (this.isFinish) {
+        Row() {
+          Text('没有更多了~')
+            .fontSize(14)
+            .fontColor($r('app.color.common_gray_03'))
+        }
+        .justifyContent(FlexAlign.Center)
+        .width('100%')
+      }
+    }
+    .height(80)
+  }
+
+  async onLoad() {
+    const res = await this.getQuestionList()
+    this.list.push(...res.rows)
+    this.isLoading = false
+    if (this.page >= res.pageTotal) {
+      this.isFinish = true
+    } else {
+      this.page++
+    }
+  }
+
+  async onRefresh() {
+    this.page = 1
+    const res = await this.getQuestionList()
+    this.list = res.rows
+    this.isRefreshing = false
+    if (this.page >= res.pageTotal) {
+      this.isFinish = true
+    } else {
+      this.isFinish = false
+      this.page++
+    }
+    promptAction.showToast({ message: '更新成功' })
+  }
+
   build() {
-    Refresh({ refreshing: true}) {
+    Refresh({ refreshing: $$this.isRefreshing}) {
       List() {
-        ForEach(this.list, (item: IQuestionItem) => {
+        ForEach(this.list, (item: QuestionItem) => {
           ListItem() {
-            this.questionBuilder(item)
+            QuestionItemComp({item: item})
           }
         })
+        this.loadingMoreBuilder()
       }
+      .nestedScroll({
+        scrollForward: NestedScrollMode.PARENT_FIRST,
+        scrollBackward: NestedScrollMode.SELF_FIRST
+      })
       .scrollBar(BarState.Off)
+      .divider({
+        strokeWidth: 0.5,
+        color: $r('app.color.common_gray_border'),
+        startMargin: 16,
+        endMargin: 16
+      })
+      .width('100%')
+      .height('100%')
+      .edgeEffect(EdgeEffect.None)
+      .onReachEnd(() => {
+        if (this.isLoading || this.isFinish || this.isRefreshing ) {
+          return
+        }
+        this.isLoading = true
+
+        this.onLoad()
+      })
     }
     .width('100%')
     .height('100%')
     .backgroundColor('#FFFFFF')
+    .onRefreshing(async () => {
+      await this.onRefresh()
+    })
+
   }
 }

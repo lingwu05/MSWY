@@ -1,5 +1,9 @@
-import { router } from "@kit.ArkUI"
-import { Clock } from "../common/Clock"
+import { promptAction, router } from "@kit.ArkUI"
+import { Clock } from "../common/components/Clock"
+import { auth } from "../common/utils/Auth"
+import { formatTime } from "../common/utils/formatTime"
+import { requestClockIn } from "../common/utils/Index"
+import { User } from "../models"
 
 interface Item {
   img: Resource
@@ -10,6 +14,7 @@ interface Item {
 @Entry
 @Component
 export struct Mine {
+  @StorageProp('user') user: User = {} as User
   @State barItems: Item[] = [
     {img: $r('app.media.ic_mine_history'), text: '历史记录'},
     {img: $r('app.media.ic_mine_collect'), text: '我的收藏'},
@@ -34,7 +39,7 @@ export struct Mine {
         .fontColor('#666')
         .zIndex(1)
       if (text == '累计学时') {
-        Text('0 分钟 >')
+        Text(formatTime(this.user.totalTime))
           .zIndex(2)
           .position({
             bottom: -12,
@@ -68,25 +73,50 @@ export struct Mine {
   build() {
     Column() {
       // 头部
-      Row() {
-        Row({space: 20}) {
-          Image($r('app.media.ic_mine_dog'))
-            .width(50)
-            .height(50)
-            .borderRadius(25)
+      Row({space: 10}) {
+        Image(this.user.avatar || $r('app.media.ic_mine_avatar'))
+          .alt($r('app.media.ic_mine_avatar'))
+          .width(55)
+          .aspectRatio(1)
+          .borderRadius(55)
+        // 是否登录
+        if (this.user.token) {
+          Column({ space: 4 }) {
+            Text(this.user.nickName || this.user.username)
+              .fontSize(18)
+              .fontWeight(500)
+              .maxLines(1)
+              .textOverflow({ overflow: TextOverflow.Ellipsis })
+            Row({ space: 4 }) {
+              Text('编辑信息')
+                .fontSize(12)
+                .fontColor($r('app.color.common_gray_01'))
+              Image($r('app.media.ic_mine_edit'))
+                .width(12)
+                .aspectRatio(1)
+                .fillColor($r('app.color.common_gray_01'))
+            }
+          }
+          .layoutWeight(1)
+          .alignItems(HorizontalAlign.Start)
+        } else {
           Text('立即登录')
             .fontSize(18)
-            .fontWeight(700)
+            .fontWeight(500)
+            .maxLines(1)
+            .textOverflow({ overflow: TextOverflow.Ellipsis })
+            .layoutWeight(1)
             .onClick(() => {
-              router.pushUrl({
-                url: 'pages/Login'
+              auth.checkAuth({
+                url: '/pages/Login'.slice(1)
               })
-              console.log('121331123')
             })
-
         }
 
-        Clock()
+        Clock({clockCount: this.user.clockinNumbers})
+          .onClick(() => {
+            requestClockIn()
+          })
       }
       .width('100%')
       .justifyContent(FlexAlign.SpaceBetween)

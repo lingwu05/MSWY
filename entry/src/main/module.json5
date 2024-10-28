@@ -9,6 +9,12 @@
       "tablet",
       "2in1"
     ],
+    /*权限配置*/
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.INTERNET"
+      }
+    ],
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",
@@ -32,7 +38,7 @@
             ]
           }
         ]
-      }
+      },
     ],
     "extensionAbilities": [
       {
