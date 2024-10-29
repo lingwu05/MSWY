@@ -11,7 +11,6 @@ interface InterviewItem {
   likeFlag: 0 | 1 | null
 }
 
-@Preview
 @Entry
 @Component
 export struct Interview {

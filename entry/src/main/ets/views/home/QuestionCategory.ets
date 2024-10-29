@@ -237,7 +237,6 @@ export struct QuestionCategory {
                 showClose: false,
               })
             .onClick(() => {
-              // 4.控制显示
               this.isShow = true
             })
         }

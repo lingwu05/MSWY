@@ -36,7 +36,6 @@ class Auth {
         // 带上 return_url 用户登录回跳
         const params = options.params as Record<string, string> || {}
         params.return_url = options.url
-        promptAction.showToast({message: JSON.stringify(params)})
         router.pushUrl({ url: 'pages/Login', params: params })
       }
     }

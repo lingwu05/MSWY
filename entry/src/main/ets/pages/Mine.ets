@@ -158,7 +158,24 @@ export struct Mine {
       // 设置列表
       Column() {
         ForEach(this.settingItems, (it: Item) => {
-          this.settingBarBuilder(it.img, it.text)
+          Column() {
+            this.settingBarBuilder(it.img, it.text)
+          }
+          .onClick(() => {
+            if (it.text == '开发常用词') {
+              auth.checkAuth({
+                url: '/pages/DevWord'.slice(1)
+              })
+            } else if (it.text == '面试录音') {
+
+            } else if (it.text == '推荐分享') {
+
+            } else if (it.text == '关于我们') {
+
+            } else if (it.text == '设置') {
+
+            }
+          })
         })
       }
       .width('100%')

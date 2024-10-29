@@ -10,6 +10,7 @@
     "pages/Mine",
     "pages/Project",
     "pages/ClockPage",
-    "pages/StudyInfo"
+    "pages/StudyInfo",
+    "pages/DevWord"
   ]
 }
