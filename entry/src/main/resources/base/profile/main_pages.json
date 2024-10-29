@@ -9,6 +9,7 @@
     "pages/Interview",
     "pages/Mine",
     "pages/Project",
-    "pages/ClockPage"
+    "pages/ClockPage",
+    "pages/StudyInfo"
   ]
 }

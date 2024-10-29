@@ -3,6 +3,11 @@ import { MyNavBar } from '../common/components/MyNavBar'
 import { http } from '../common/utils/Index'
 import { promptAction } from '@kit.ArkUI'
 
+interface DayBuilderParams {
+  totalDays: number
+  text: string
+}
+
 interface RequestParams {
   month: string
   year: string
@@ -30,10 +35,10 @@ struct ClockPage {
   async getData(month: string) {
     if (month) {
       const arr = month.split('-')
-      this.clockinInfo = await http.request<ClockinInfo, RequestParams>({
+      this.clockinInfo = await http.request<ClockinInfo>({
         url: 'clockinInfo',
-        method: 'post',
-        data: {
+        method: 'get',
+        params: {
           month: arr[1],
           year: arr[0]
         }
@@ -41,10 +46,9 @@ struct ClockPage {
     } else {
       this.clockinInfo = await http.request<ClockinInfo, RequestParams>({
         url: 'clockinInfo',
-        method: 'post'
+        method: 'get'
       })
     }
-    promptAction.showToast({message: JSON.stringify(this.clockinInfo)})
     this.selectedDays = this.clockinInfo.clockins.map(item => ({ date: item.createdAt } as HmCalendarSelectedDay))
   }
 
@@ -54,11 +58,12 @@ struct ClockPage {
     totalClockinNumber: 0,
     clockins: []
   }
+
   @State selectedDays: HmCalendarSelectedDay[] = []
-  @Builder dayBuilder(totalDays: number, text: string) {
+  @Builder dayBuilder(params: DayBuilderParams) {
     Column({space: 5}) {
       Row({space: 10}) {
-        Text(totalDays.toString())
+        Text(params.totalDays.toString())
           .fontWeight(FontWeight.Bold)
           .fontSize(40)
         Text('天')
@@ -67,7 +72,7 @@ struct ClockPage {
           .margin({bottom: 8})
       }
       .alignItems(VerticalAlign.Bottom)
-      Text(text)
+      Text(params.text)
         .fontSize(12)
         .fontColor($r('app.color.common_gray_01'))
     }
@@ -77,8 +82,8 @@ struct ClockPage {
     Column() {
       MyNavBar({ title: '打卡页面', showRightIcon: false })
       Row({space: 40}) {
-        this.dayBuilder(this.clockinInfo.totalClockinNumber, '累计打卡')
-        this.dayBuilder(this.clockinInfo.clockinNumbers, '连续打卡')
+        this.dayBuilder({totalDays: this.clockinInfo.totalClockinNumber, text:  '累计打卡'})
+        this.dayBuilder({totalDays: this.clockinInfo.clockinNumbers, text: '连续打卡'})
       }
       .width('100%')
       .padding({left: $r('app.string.padding_normal')})

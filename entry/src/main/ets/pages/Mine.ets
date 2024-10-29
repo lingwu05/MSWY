@@ -107,7 +107,7 @@ export struct Mine {
             .textOverflow({ overflow: TextOverflow.Ellipsis })
             .layoutWeight(1)
             .onClick(() => {
-              auth.checkAuth({
+              router.pushUrl({
                 url: '/pages/Login'.slice(1)
               })
             })
@@ -128,7 +128,22 @@ export struct Mine {
       // 导航区
       Row() {
         ForEach(this.barItems, (it: Item) => {
-          this.funcBarBuilder(it.img, it.text)
+          Column() {
+            this.funcBarBuilder(it.img, it.text)
+          }
+          .onClick(() => {
+            if (it.text == '历史记录') {
+
+            } else if (it.text == '我的收藏') {
+
+            } else if (it.text == '我的点赞') {
+
+            } else if (it.text == '累计学时') {
+              auth.checkAuth({
+                url: '/pages/StudyInfo'.slice(1)
+              })
+            }
+          })
         })
       }
       .width('100%')
