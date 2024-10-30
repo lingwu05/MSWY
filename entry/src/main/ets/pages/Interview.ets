@@ -1,132 +1,13 @@
-interface InterviewItem {
-  id: string
-  stem: string
-  content: string
-  likeCount: number
-  views: number
-  creatorName: string
-  creatorAvatar: ResourceStr
-  createdAt: string
-  tags: string[]
-  likeFlag: 0 | 1 | null
-}
+import { InterviewItem} from "../models"
+import { InterviewList } from "../views/interview/InterviewList"
 
 @Entry
 @Component
 export struct Interview {
 
-  @State isSelected: boolean = true
-
-  @State list: InterviewItem[] = [
-    {
-      id: '10001',
-      stem: '微软谷歌面试算法难度 | 你想象不到的简单',
-      content: '内推 候选人可以找到认识的微软员工,员工会把简历提交到微软人才库。这样微软HR就可以在人才库的系统中查看到你的简历。',
-      likeCount: 13,
-      views: 347,
-      creatorName: '凡人的积累',
-      creatorAvatar: $r('app.media.ic_interview_avatar'),
-      createdAt: '一周前',
-      tags: ['大厂', '算法'],
-      likeFlag: 1
-    },
-    {
-      id: '10002',
-      stem: '美团-工程效能组-开发工程师实习生(工程基建方向)-一面',
-      content: '项目介绍网页音视频项目项目代码量多少？是一个人完成的吗？介绍SaaS视频项目SpringSpring框架有什么特性？(不知道这个问题要问什么，答的扩展性、封装性啥的)控制反转了解吗？',
-      likeCount: 32,
-      views: 503,
-      creatorName: '响亮的名字',
-      creatorAvatar: $r('app.media.ic_interview_avatar'),
-      createdAt: '10 小时前',
-      tags: ['大厂', 'Java'],
-      likeFlag: 0
-    },
-    {
-      id: '10003',
-      stem: '美团-工程效能组-开发工程师实习生(工程基建方向)-一面',
-      content: '项目介绍网页音视频项目项目代码量多少？是一个人完成的吗？介绍SaaS视频项目SpringSpring框架有什么特性？(不知道这个问题要问什么，答的扩展性、封装性啥的)控制反转了解吗？',
-      likeCount: 32,
-      views: 503,
-      creatorName: '响亮的名字',
-      creatorAvatar: $r('app.media.ic_interview_avatar'),
-      createdAt: '10 小时前',
-      tags: ['大厂', 'Java'],
-      likeFlag: 0
-    },
-    {
-      id: '10004',
-      stem: '美团-工程效能组-开发工程师实习生(工程基建方向)-一面',
-      content: '项目介绍网页音视频项目项目代码量多少？是一个人完成的吗？介绍SaaS视频项目SpringSpring框架有什么特性？(不知道这个问题要问什么，答的扩展性、封装性啥的)控制反转了解吗？',
-      likeCount: 32,
-      views: 503,
-      creatorName: '响亮的名字',
-      creatorAvatar: $r('app.media.ic_interview_avatar'),
-      createdAt: '10 小时前',
-      tags: ['大厂', 'Java'],
-      likeFlag: 0
-    },
-    {
-      id: '10005',
-      stem: '美团-工程效能组-开发工程师实习生(工程基建方向)-一面',
-      content: '项目介绍网页音视频项目项目代码量多少？是一个人完成的吗？介绍SaaS视频项目SpringSpring框架有什么特性？(不知道这个问题要问什么，答的扩展性、封装性啥的)控制反转了解吗？',
-      likeCount: 32,
-      views: 503,
-      creatorName: '响亮的名字',
-      creatorAvatar: $r('app.media.ic_interview_avatar'),
-      createdAt: '10 小时前',
-      tags: ['大厂', 'Java'],
-      likeFlag: 0
-    },
-    {
-      id: '10006',
-      stem: '美团-工程效能组-开发工程师实习生(工程基建方向)-一面',
-      content: '项目介绍网页音视频项目项目代码量多少？是一个人完成的吗？介绍SaaS视频项目SpringSpring框架有什么特性？(不知道这个问题要问什么，答的扩展性、封装性啥的)控制反转了解吗？',
-      likeCount: 32,
-      views: 503,
-      creatorName: '响亮的名字',
-      creatorAvatar: $r('app.media.ic_interview_avatar'),
-      createdAt: '10 小时前',
-      tags: ['大厂', 'Java'],
-      likeFlag: 0
-    },
-    {
-      id: '10007',
-      stem: '美团-工程效能组-开发工程师实习生(工程基建方向)-一面',
-      content: '项目介绍网页音视频项目项目代码量多少？是一个人完成的吗？介绍SaaS视频项目SpringSpring框架有什么特性？(不知道这个问题要问什么，答的扩展性、封装性啥的)控制反转了解吗？',
-      likeCount: 32,
-      views: 503,
-      creatorName: '响亮的名字',
-      creatorAvatar: $r('app.media.ic_interview_avatar'),
-      createdAt: '10 小时前',
-      tags: ['大厂', 'Java'],
-      likeFlag: 0
-    },
-    {
-      id: '10008',
-      stem: '美团-工程效能组-开发工程师实习生(工程基建方向)-一面',
-      content: '项目介绍网页音视频项目项目代码量多少？是一个人完成的吗？介绍SaaS视频项目SpringSpring框架有什么特性？(不知道这个问题要问什么，答的扩展性、封装性啥的)控制反转了解吗？',
-      likeCount: 32,
-      views: 503,
-      creatorName: '响亮的名字',
-      creatorAvatar: $r('app.media.ic_interview_avatar'),
-      createdAt: '10 小时前',
-      tags: ['大厂', 'Java'],
-      likeFlag: 0
-    },
-    {
-      id: '10009',
-      stem: '中邮消费金融AI算法工程师（实习生）',
-      content: '这个是在猎聘上投递的 能收到面试属实是意外之喜面试官是nlp方向的，主要是问nlp相关 首先自我介绍说一个在上段实习中的项目 这里说了一个搭建智能客服对话助手',
-      likeCount: 10,
-      views: 98,
-      creatorName: '不想秃头的夜猫子',
-      creatorAvatar: $r('app.media.ic_interview_avatar'),
-      createdAt: '23 分钟前',
-      tags: ['国企', '实习'],
-      likeFlag: 1
-    }
-  ]
+  @State activeIndex: number = 0
+  @State sort: number = 0
+  @State isRefreshing: boolean = false
 
   @Builder contentBuilder(item: InterviewItem) {
     Column({space: 10}) {
@@ -140,14 +21,11 @@ export struct Interview {
             .fontWeight(600)
             .textOverflow({overflow: TextOverflow.Ellipsis})
             .maxLines(2)
-          Row() {
-            Text(item.creatorName + ' . ' + item.createdAt)
-              .fontSize(12)
-              .fontColor('#9c9c9c')
-          }
-          .width('100%')
+          Text(item.creatorName + ' . ' + item.createdAt)
+            .fontSize(12)
+            .fontColor('#9c9c9c')
         }
-        .width('70%')
+        .alignItems(HorizontalAlign.Start)
         Blank()
           .layoutWeight(1)
         Image($r('app.media.ic_interview_more'))
@@ -161,7 +39,7 @@ export struct Interview {
         .maxLines(2)
         .fontColor('#666')
       Row({space: 3}) {
-        ForEach(item.tags, (tag: string) => {
+        ForEach(['大厂', '面经'], (tag: string) => {
           Text(tag)
             .fontColor('#79bca4')
             .fontSize(12)
@@ -188,6 +66,31 @@ export struct Interview {
     .borderColor('#f6f6f6')
   }
 
+
+  @Builder tabBarBuilder(text: string, index: number) {
+    Column({space: 10}) {
+      Text('默认')
+        .fontSize(15)
+        .fontColor(this.activeIndex === index ? $r('app.color.black'): $r('app.color.common_gray_01'))
+      Text()
+        .width(this.activeIndex === index ? 20 : 0)
+        .height(2)
+        .backgroundColor($r('app.color.black'))
+        .animation({ duration: this.activeIndex === index ? 200 : 0 })
+    }
+    .onClick(() => {
+      if (this.activeIndex != index) {
+        if (index === 0) {
+          this.sort = 0
+        } else {
+          this.sort = 30
+        }
+        this.activeIndex = index
+        this.isRefreshing = true
+      }
+    })
+  }
+
   build() {
     Column() {
       Row({space: 10}) {
@@ -195,54 +98,28 @@ export struct Interview {
           .fontSize(22)
           .fontWeight(900)
         TextInput({placeholder: '请输入关键词'})
+          .layoutWeight(1)
       }
       .width('100%')
       .padding({
-        left:10
+        left:10, right: 10
       })
       Row({space: 10}) {
-        Button('默认', {stateEffect: false})
-          .fontSize(14)
-          .backgroundColor(Color.Transparent)
-          .fontColor(this.isSelected ? '#2b2b2b' : '#9c9c9c')
-          .padding(0)
-          .onClick(() => {
-            this.isSelected = true
-          })
-        Button('最新', {stateEffect: false})
-          .fontSize(14)
-          .backgroundColor(Color.Transparent)
-          .fontColor(!this.isSelected ? '#2b2b2b' : '#9c9c9c')
-          .padding(0)
-          .onClick(() => {
-            this.isSelected = false
-          })
-        Column(){}.borderWidth({bottom: 2}).width(10).zIndex(1)
-        .position({left: 5, bottom: 5}).borderColor(this.isSelected ? '#2b2b2b' : Color.Transparent)
-        Column(){}.borderWidth({bottom: 2}).width(10).zIndex(1)
-        .position({left: 40, bottom: 5}).borderColor(!this.isSelected ? '#2b2b2b' : Color.Transparent)
+        this.tabBarBuilder('默认', 0)
+        this.tabBarBuilder('推荐', 1)
       }
       .width('100%')
+      .padding({left: 16, right: 16})
       .borderWidth({
-        bottom: 1
+        bottom: 0.5
       })
-      .borderColor('#f6f6f6')
-      .padding({
-        left:10
+      .borderColor({
+        bottom: $r('app.color.common_gray_border')
       })
-
-      Refresh({ refreshing: true}) {
-        List() {
-          ForEach(this.list, (item: InterviewItem) => {
-            ListItem() {
-              this.contentBuilder(item)
-            }
-          })
-        }
-        .scrollBar(BarState.Off)
-      }
-      .width('100%')
-      .height('100%')
+      InterviewList({
+        sort: this.sort,
+        isRefreshing: this.isRefreshing
+      })
     }
     .width('100%')
     .height('100%')

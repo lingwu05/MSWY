@@ -11,6 +11,7 @@
     "pages/Project",
     "pages/ClockPage",
     "pages/StudyInfo",
-    "pages/DevWord"
+    "pages/DevWord",
+    "pages/OptionalPage"
   ]
 }

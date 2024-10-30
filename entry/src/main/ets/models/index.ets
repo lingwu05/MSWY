@@ -51,3 +51,22 @@ export interface User {
   totalTime?: number
   clockinNumbers?: number
 }
+
+export interface InterviewItem {
+  id: string
+  stem: string
+  content: string
+  likeCount: number
+  views: number
+  creatorName: string
+  creatorAvatar: ResourceStr
+  createdAt: string
+  stage: string[]
+  likeFlag: 0 | 1 | null
+  relatedQuestions: InterviewRelatedQuestion[] | null
+}
+
+export interface InterviewRelatedQuestion {
+  id: string
+  stem: string
+}
