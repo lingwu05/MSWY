@@ -2,9 +2,22 @@ import { Tag } from '../common/components/Index';
 import { MyNavBar } from '../common/components/MyNavBar';
 import { webview } from '@kit.ArkWeb';
 import { QuestionDetail, QuestionItem, QuestionPageParams } from '../models';
-import { router } from '@kit.ArkUI';
+import { promptAction, router } from '@kit.ArkUI';
 import { http } from '../common/utils/Index';
 import { LoadingDialog } from '../common/components/LoadingDialog';
+
+interface ResponseType {
+  success: boolean
+  code: number
+  message: string
+  data: object
+}
+
+interface RequestParams {
+  id: string
+  type: number
+  optType: number
+}
 
 @Entry
 @Component
@@ -61,6 +74,80 @@ struct QuestionPage {
           }
           Image($r('sys.media.ohos_ic_public_more'))
             .width(15)
+            .bindMenu([
+              {
+                value: this.item.collectFlag === 1 ? '取消收藏' : '收藏',
+                action: async () => {
+                  if (this.item.collectFlag == 0) {
+                    await http.request<null, RequestParams>({
+                      url: 'question/opt',
+                      method: 'post',
+                      data: {
+                        id: this.item.id,
+                        type: 0,
+                        optType: 2
+                      }
+                    })
+                    this.item.collectFlag = 1
+                    promptAction.showToast({message: '收藏成功'})
+                  } else {
+                    await http.request<ResponseType, RequestParams>({
+                      url: 'question/unOpt',
+                      method: 'post',
+                      data: {
+                        id: this.item.id,
+                        type: 0,
+                        optType: 2
+                      }
+                    })
+                    this.item.collectFlag = 0
+                    promptAction.showToast({message: '取消收藏成功'})
+                  }
+                }
+              },
+              {
+                value: this.item.likeFlag === 1 ? '取消点赞' : '点赞',
+                action: async () => {
+                  if (this.item.likeFlag === 0) {
+                    await http.request<ResponseType, RequestParams>({
+                      url: 'question/opt',
+                      method: 'post',
+                      data: {
+                        id: this.item.id,
+                        type: 0,
+                        optType: 1
+                      }
+                    })
+                    this.item.likeFlag = 1
+                    promptAction.showToast({message: '点赞成功'})
+                  } else {
+                    await http.request<ResponseType, RequestParams>({
+                      url: 'question/unOpt',
+                      method: 'post',
+                      data: {
+                        id: this.item.id,
+                        type: 0,
+                        optType: 1
+                      }
+                    })
+                    this.item.likeFlag = 0
+                    promptAction.showToast({message: '取消点赞成功'})
+                  }
+                }
+              },
+              {
+                value: '试题分享',
+                action: () => {
+
+                }
+              },
+              {
+                value: '点击反馈',
+                action: () => {
+
+                }
+              }
+            ])
         }
         .justifyContent(FlexAlign.SpaceBetween)
         .width('100%')
