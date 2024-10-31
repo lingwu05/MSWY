@@ -13,6 +13,7 @@
     "pages/StudyInfo",
     "pages/DevWord",
     "pages/OptionalPage",
-    "pages/QuestionPage"
+    "pages/QuestionPage",
+    "pages/SearchPage"
   ]
 }

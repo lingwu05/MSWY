@@ -42,6 +42,7 @@ struct HistoryView {
   @State activeIndex: number = 0
   @State sort: number = 0
   @State isRefreshing: boolean = false
+
   private controller: TabsController = new TabsController();
 
   aboutToAppear(): void {

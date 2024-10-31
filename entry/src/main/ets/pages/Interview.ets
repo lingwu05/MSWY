@@ -1,3 +1,5 @@
+import { SearchBox } from "../common/components/Index";
+import { auth } from "../common/utils/Index";
 import { InterviewItem} from "../models"
 import { InterviewList } from "../views/interview/InterviewList"
 
@@ -102,8 +104,13 @@ export struct Interview {
         Text('面试无忧')
           .fontSize(22)
           .fontWeight(900)
-        TextInput({placeholder: '请输入关键词'})
+        SearchBox({ph: '请输入关键词', boxWidth: 250})
           .layoutWeight(1)
+          .onClick(() => {
+            auth.checkAuth({
+              url: '/pages/SearchPage'.slice(1)
+            })
+          })
       }
       .width('100%')
       .padding({

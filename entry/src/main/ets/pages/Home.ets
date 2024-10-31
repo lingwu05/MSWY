@@ -1,6 +1,6 @@
 import { Clock } from "../common/components/Clock"
 import { SearchBox } from "../common/components/SearchBox"
-import { http, requestClockIn } from "../common/utils/Index"
+import { auth, http, requestClockIn } from "../common/utils/Index"
 import { User } from "../models"
 import {QuestionCategory} from '../views/home/QuestionCategory'
 import { scanBarcode } from "@kit.ScanKit"
@@ -119,7 +119,13 @@ export struct Home {
                 }
               }
             })
-          SearchBox({layoutWeightValue: 1})
+          SearchBox({layoutWeightValue: 1, boxWidth: 200})
+            .onClick(() => {
+              auth.checkAuth({
+                url: '/pages/SearchPage'.slice(1)
+              })
+            })
+
           Clock({clockCount: this.user.clockinNumbers})
             .onClick(() => {
               requestClockIn()
