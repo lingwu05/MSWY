@@ -85,7 +85,7 @@ export struct QuestionList {
   build() {
     Refresh({ refreshing: $$this.isRefreshing}) {
       List() {
-        ForEach(this.list, (item: QuestionItem) => {
+        ForEach(this.list, (item: QuestionItem, index) => {
           ListItem() {
             QuestionItemComp({item: item})
           }
@@ -93,7 +93,9 @@ export struct QuestionList {
             auth.checkAuth({
               url: '/pages/QuestionPage'.slice(1),
               params: {
-                item: item
+                item: item,
+                index: index,
+                list: this.list
               } as QuestionPageParams
             })
           })

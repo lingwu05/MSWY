@@ -84,4 +84,6 @@ export interface QuestionDetail extends QuestionItem {
 
 export interface QuestionPageParams {
   item: QuestionItem
+  index: number
+  list: QuestionItem[]
 }

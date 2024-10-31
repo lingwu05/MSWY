@@ -1,7 +1,7 @@
 import { Tag } from '../common/components/Index';
 import { MyNavBar } from '../common/components/MyNavBar';
 import { webview } from '@kit.ArkWeb';
-import { QuestionDetail, QuestionPageParams } from '../models';
+import { QuestionDetail, QuestionItem, QuestionPageParams } from '../models';
 import { router } from '@kit.ArkUI';
 import { http } from '../common/utils/Index';
 import { LoadingDialog } from '../common/components/LoadingDialog';
@@ -11,6 +11,8 @@ import { LoadingDialog } from '../common/components/LoadingDialog';
 struct QuestionPage {
   @State item: QuestionDetail = {} as QuestionDetail
   @State isLoading: boolean = false
+  @State questionIdex: number = 0
+  @State list: QuestionItem[] = []
 
   dialog: CustomDialogController = new CustomDialogController({
     builder: LoadingDialog({ message: '加载中...' }),
@@ -23,6 +25,8 @@ struct QuestionPage {
     const params = router.getParams() as QuestionPageParams
     if (params) {
       this.item = params.item as QuestionDetail
+      this.questionIdex = params.index
+      this.list = params.list
       this.isLoading = true
       this.dialog.open()
       this.item = await this.getQuestionDetail(this.item.id)
@@ -102,19 +106,35 @@ struct QuestionPage {
             Image($r('sys.media.ohos_ic_public_arrow_left'))
               .width(20)
               .aspectRatio(1)
-              .fillColor($r('app.color.common_gray_01'))
+              .fillColor(this.questionIdex == 0 ? $r('app.color.common_gray_01') :  $r('app.color.common_gray_03'))
             Text(' 上一题')
-              .fontColor($r('app.color.common_gray_01'))
+              .fontColor(this.questionIdex == 0 ? $r('app.color.common_gray_01') :  $r('app.color.common_gray_03'))
           }
+          .onClick(async () => {
+            if (this.questionIdex != 0) {
+              this.dialog.open()
+              --this.questionIdex
+              this.item = await this.getQuestionDetail(this.list[this.questionIdex].id)
+              this.dialog.close()
+            }
+          })
 
           Row() {
             Text('下一题 ')
-              .fontColor($r('app.color.common_gray_03'))
+              .fontColor(this.questionIdex == this.list.length - 1 ? $r('app.color.common_gray_01') :  $r('app.color.common_gray_03'))
             Image($r('sys.media.ohos_ic_public_arrow_right'))
               .width(20)
               .aspectRatio(1)
-              .fillColor($r('app.color.common_gray_03'))
+              .fillColor(this.questionIdex == this.list.length - 1 ? $r('app.color.common_gray_01') :  $r('app.color.common_gray_03'))
           }
+          .onClick(async () => {
+            if (this.questionIdex != this.list.length - 1) {
+              this.dialog.open()
+              ++this.questionIdex
+              this.item = await this.getQuestionDetail(this.list[this.questionIdex].id)
+              this.dialog.close()
+            }
+          })
         }
         .height(44)
         .width('100%')
