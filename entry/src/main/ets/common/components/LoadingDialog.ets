@@ -1,8 +1,7 @@
 @Preview
 @CustomDialog
 export struct LoadingDialog {
-  @State
-  message: string = ''
+  @State message: string = ''
   controller: CustomDialogController
 
   build() {

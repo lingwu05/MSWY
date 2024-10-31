@@ -3,6 +3,8 @@ import { SearchBox } from "../common/components/SearchBox"
 import { http, requestClockIn } from "../common/utils/Index"
 import { User } from "../models"
 import {QuestionCategory} from '../views/home/QuestionCategory'
+import { scanBarcode } from "@kit.ScanKit"
+import { promptAction, router } from "@kit.ArkUI"
 
 interface IHomeProjectItem {
   title: string
@@ -10,6 +12,10 @@ interface IHomeProjectItem {
   img: Resource
   bcolor: string
   tcolor: string
+}
+
+export interface RouterParams {
+  index: number
 }
 
 @Preview
@@ -49,7 +55,6 @@ export struct Home {
     },
   ]
 
-
   @Builder
   projectCardBuilder(item: IHomeProjectItem) {
     Column() {
@@ -79,6 +84,14 @@ export struct Home {
       colors: [[item.bcolor, 0], [item.tcolor, 1]]
     })
     .borderRadius(8)
+    .onClick(() => {
+      router.pushUrl({
+        url: '/pages/Index'.slice(1),
+        params: {
+          index: 1
+        }
+      })
+    })
   }
 
   build() {
@@ -89,6 +102,23 @@ export struct Home {
           Image($r('app.media.ic_scan_code'))
             .width(24)
             .aspectRatio(1)
+            .onClick(async () => {
+              if (canIUse('SystemCapability.Multimedia.Scan.ScanBarcode')) {
+                const result = await scanBarcode.startScanForResult(getContext(this))
+                if (result.originalValue) {
+                  try {
+                    router.pushUrl({
+                      url: 'pages/QuestionPage',
+                      params: {
+                        id: result.originalValue,
+                      }
+                    })
+                  } catch (e) {
+                    promptAction.showToast({ message: '没有找到试题' })
+                  }
+                }
+              }
+            })
           SearchBox({layoutWeightValue: 1})
           Clock({clockCount: this.user.clockinNumbers})
             .onClick(() => {
@@ -107,6 +137,14 @@ export struct Home {
               .width('100%')
               .aspectRatio(2.65)
               .objectFit(ImageFit.Fill)
+              .onClick(() => {
+                router.pushUrl({
+                  url: '/pages/Index'.slice(1),
+                  params: {
+                    index: 1
+                  }
+                })
+              })
           })
         }
         .indicator( // 设置圆点导航点样式

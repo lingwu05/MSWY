@@ -3,8 +3,9 @@ import { MyNavBar } from '../common/components/MyNavBar';
 import { webview } from '@kit.ArkWeb';
 import { QuestionDetail, QuestionItem, QuestionPageParams } from '../models';
 import { promptAction, router } from '@kit.ArkUI';
-import { http } from '../common/utils/Index';
+import { auth, http } from '../common/utils/Index';
 import { LoadingDialog } from '../common/components/LoadingDialog';
+import { ShareDialog } from '../common/components/ShareDialog';
 
 interface ResponseType {
   success: boolean
@@ -27,8 +28,18 @@ struct QuestionPage {
   @State questionIdex: number = 0
   @State list: QuestionItem[] = []
 
-  dialog: CustomDialogController = new CustomDialogController({
+  loadingdialog: CustomDialogController = new CustomDialogController({
     builder: LoadingDialog({ message: '加载中...' }),
+    customStyle: true,
+    alignment:DialogAlignment.Center
+  })
+
+  shareDialog: CustomDialogController = new CustomDialogController({
+    builder: ShareDialog({
+      stem: this.item.stem,
+      qid: this.item.id,
+      username: auth.getUser().username
+    }),
     customStyle: true,
     alignment:DialogAlignment.Center
   })
@@ -41,9 +52,9 @@ struct QuestionPage {
       this.questionIdex = params.index
       this.list = params.list
       this.isLoading = true
-      this.dialog.open()
+      this.loadingdialog.open()
       this.item = await this.getQuestionDetail(this.item.id)
-      this.dialog.close()
+      this.loadingdialog.close()
       this.isLoading = false
     }
   }
@@ -138,7 +149,7 @@ struct QuestionPage {
               {
                 value: '试题分享',
                 action: () => {
-
+                  this.shareDialog.open()
                 }
               },
               {
@@ -199,10 +210,10 @@ struct QuestionPage {
           }
           .onClick(async () => {
             if (this.questionIdex != 0) {
-              this.dialog.open()
+              this.loadingdialog.open()
               --this.questionIdex
               this.item = await this.getQuestionDetail(this.list[this.questionIdex].id)
-              this.dialog.close()
+              this.loadingdialog.close()
             }
           })
 
@@ -216,10 +227,10 @@ struct QuestionPage {
           }
           .onClick(async () => {
             if (this.questionIdex != this.list.length - 1) {
-              this.dialog.open()
+              this.loadingdialog.open()
               ++this.questionIdex
               this.item = await this.getQuestionDetail(this.list[this.questionIdex].id)
-              this.dialog.close()
+              this.loadingdialog.close()
             }
           })
         }

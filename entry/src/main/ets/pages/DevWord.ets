@@ -63,7 +63,6 @@ struct DevWord {
           }
           .onClick(() => {
             this.code = code
-            promptAction.showToast({message: code})
             this.isShow = true
           })
         } else {

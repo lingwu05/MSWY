@@ -1,9 +1,9 @@
-import {Home} from './Home'
+import {Home, RouterParams} from './Home'
 import {Interview} from './Interview'
 import {Project} from './Project'
 import {Mine} from './Mine'
 import { User } from '../models'
-import { window } from '@kit.ArkUI'
+import { router, window } from '@kit.ArkUI'
 
 interface ITarBarItem {
   icon: Resource
@@ -55,6 +55,13 @@ struct Index {
     .width('100%')
     .height('100%')
     .justifyContent(FlexAlign.Center)
+  }
+
+  aboutToAppear(): void {
+    const res = router.getParams() as RouterParams
+    if (res) {
+      this.currentTabBarIndex = res.index
+    }
   }
 
   build() {
