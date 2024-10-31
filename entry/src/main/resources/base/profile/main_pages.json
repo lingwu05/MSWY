@@ -12,6 +12,7 @@
     "pages/ClockPage",
     "pages/StudyInfo",
     "pages/DevWord",
-    "pages/OptionalPage"
+    "pages/OptionalPage",
+    "pages/QuestionPage"
   ]
 }

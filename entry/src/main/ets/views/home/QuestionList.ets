@@ -1,6 +1,6 @@
 import { QuestionItemComp } from "../../common/components/QuestionItemComp"
-import { http } from "../../common/utils/Index"
-import { PageData, QuestionItem, QuestionListParams, SortType} from "../../models/index"
+import { auth, http } from "../../common/utils/Index"
+import { PageData, QuestionItem, QuestionListParams, QuestionPageParams, SortType} from "../../models/index"
 import { promptAction } from "@kit.ArkUI"
 
 @Preview
@@ -89,6 +89,14 @@ export struct QuestionList {
           ListItem() {
             QuestionItemComp({item: item})
           }
+          .onClick(() => {
+            auth.checkAuth({
+              url: '/pages/QuestionPage'.slice(1),
+              params: {
+                item: item
+              } as QuestionPageParams
+            })
+          })
         })
         this.loadingMoreBuilder()
       }

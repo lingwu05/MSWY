@@ -4,6 +4,7 @@ import { auth } from "../common/utils/Auth"
 import { formatTime } from "../common/utils/formatTime"
 import { requestClockIn } from "../common/utils/Index"
 import { User } from "../models"
+import { OptionalRequestParams } from "./OptionalPage"
 
 interface Item {
   img: Resource
@@ -133,11 +134,32 @@ export struct Mine {
           }
           .onClick(() => {
             if (it.text == '历史记录') {
-
+              auth.checkAuth({
+                url: '/pages/OptionalPage'.slice(1),
+                params: {
+                  optType: 3,
+                  page: 1,
+                  questionBankType: 10
+                } as OptionalRequestParams
+              })
             } else if (it.text == '我的收藏') {
-
+              auth.checkAuth({
+                url: '/pages/OptionalPage'.slice(1),
+                params: {
+                  optType: 2,
+                  page: 1,
+                  questionBankType: 10
+                } as OptionalRequestParams
+              })
             } else if (it.text == '我的点赞') {
-
+              auth.checkAuth({
+                url: '/pages/OptionalPage'.slice(1),
+                params: {
+                  optType: 1,
+                  page: 1,
+                  questionBankType: 10
+                } as OptionalRequestParams
+              })
             } else if (it.text == '累计学时') {
               auth.checkAuth({
                 url: '/pages/StudyInfo'.slice(1)

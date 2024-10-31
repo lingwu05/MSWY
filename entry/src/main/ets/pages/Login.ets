@@ -118,9 +118,17 @@ struct Login {
           left: 50
         })
         Button({ type: ButtonType.Normal }) {
-          Text('立即登录')
-            .fontColor($r('app.color.light_white'))
-            .fontSize(20)
+          Row({space: 5}) {
+            if (this.isVerify) {
+              LoadingProgress()
+                .height(28)
+                .aspectRatio(1)
+                .color(Color.White)
+            }
+            Text('立即登录')
+              .fontColor($r('app.color.light_white'))
+              .fontSize(20)
+          }
         }
         .width('90%')
         .height(50)

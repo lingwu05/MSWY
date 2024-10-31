@@ -1,4 +1,5 @@
 import { QuestionItem, SortType} from '../../models/index'
+import { auth } from '../utils/Index'
 import { Tag } from './Tag'
 
 @Preview

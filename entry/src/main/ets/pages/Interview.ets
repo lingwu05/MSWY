@@ -1,6 +1,11 @@
 import { InterviewItem} from "../models"
 import { InterviewList } from "../views/interview/InterviewList"
 
+interface Person {
+  name: string;
+  age: number;
+}
+
 @Entry
 @Component
 export struct Interview {
@@ -69,7 +74,7 @@ export struct Interview {
 
   @Builder tabBarBuilder(text: string, index: number) {
     Column({space: 10}) {
-      Text('默认')
+      Text(text)
         .fontSize(15)
         .fontColor(this.activeIndex === index ? $r('app.color.black'): $r('app.color.common_gray_01'))
       Text()

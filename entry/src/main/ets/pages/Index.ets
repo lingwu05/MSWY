@@ -3,6 +3,7 @@ import {Interview} from './Interview'
 import {Project} from './Project'
 import {Mine} from './Mine'
 import { User } from '../models'
+import { window } from '@kit.ArkUI'
 
 interface ITarBarItem {
   icon: Resource

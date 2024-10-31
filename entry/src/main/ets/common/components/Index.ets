@@ -1,4 +1,3 @@
-export * from './TextWithDivider'
 export * from './Clock'
 export * from './SearchBox'
 export * from './Tag'
