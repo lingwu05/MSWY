@@ -6,9 +6,6 @@ import { Tag } from './Tag'
 @Component
 export struct QuestionItemComp {
   @Prop item: QuestionItem = {} as QuestionItem
-  @Prop typeId: number = 0
-  @Prop sort: SortType = SortType.Default
-  @State page: number = 1
 
   build() {
     Column({space: 10}) {

@@ -14,6 +14,7 @@
     "pages/DevWord",
     "pages/OptionalPage",
     "pages/QuestionPage",
-    "pages/SearchPage"
+    "pages/SearchPage",
+    "test/TextPage"
   ]
 }

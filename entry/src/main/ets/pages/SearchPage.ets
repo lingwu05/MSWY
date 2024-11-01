@@ -1,5 +1,7 @@
 import { searchHistory } from '../common/utils/SearchHistory';
 import { LengthMetrics, promptAction, router } from '@kit.ArkUI';
+import { OptionalList } from '../views/mine/OptionalList';
+import { ContentType } from './OptionalPage';
 
 @Entry
 @Component
@@ -8,6 +10,7 @@ struct SearchPage {
   @State activeIndex: number = 0
   @State keywordList: string[] = []
   @State inputText: string = ''
+  @State isRefresh: boolean = false
 
   aboutToAppear(): void {
     this.keywordList = searchHistory.read('keyword')
@@ -45,6 +48,9 @@ struct SearchPage {
             // promptAction.showToast({message: JSON.stringify(this.keywordList)})
             searchHistory.update('keyword', this.keywordList)
           })
+          .onChange(() => {
+            this.isRefresh = true
+          })
         Text('取消')
           .fontColor(Color.Black)
           .onClick(() => {
@@ -69,40 +75,51 @@ struct SearchPage {
       Divider()
         .strokeWidth(0.5)
         .color($r('app.color.common_gray_border'))
-      Row() {
-        Text('搜索记录')
-          .fontColor($r('app.color.common_gray_01'))
-          .fontSize(15)
-        Image($r('app.media.ic_common_delete'))
-          .width(15)
-          .height(15)
-          .fillColor($r('app.color.common_gray_01'))
-          .onClick(() => {
-            this.keywordList = []
-            searchHistory.delete('keyword')
-          })
-      }
-      .padding(16)
-      .width('100%')
-      .justifyContent(FlexAlign.SpaceBetween)
+      if (!this.inputText) {
+        Row() {
+          Text('搜索记录')
+            .fontColor($r('app.color.common_gray_01'))
+            .fontSize(15)
+          Image($r('app.media.ic_common_delete'))
+            .width(15)
+            .height(15)
+            .fillColor($r('app.color.common_gray_01'))
+            .onClick(() => {
+              this.keywordList = []
+              searchHistory.delete('keyword')
+            })
+        }
+        .padding(16)
+        .width('100%')
+        .justifyContent(FlexAlign.SpaceBetween)
 
-      Flex({
-        direction: FlexDirection.Row,
-        wrap: FlexWrap.Wrap,
-        justifyContent: FlexAlign.Start,
-        space: {main:LengthMetrics.vp(10), cross:LengthMetrics.vp(10)}
-      }) {
-        ForEach(this.keywordList, (item: string, index) => {
-          Text(item)
-            .fontSize(13)
-            .fontColor('#97989a')
-            .backgroundColor('#f3f4f6')
-            .padding({left: 10, right: 10})
-            .height(30)
-            .borderRadius(15)
+        Flex({
+          direction: FlexDirection.Row,
+          wrap: FlexWrap.Wrap,
+          justifyContent: FlexAlign.Start,
+          space: {main:LengthMetrics.vp(10), cross:LengthMetrics.vp(10)}
+        }) {
+          ForEach(this.keywordList, (item: string, index) => {
+            Text(item)
+              .fontSize(13)
+              .fontColor('#97989a')
+              .backgroundColor('#f3f4f6')
+              .padding({left: 10, right: 10})
+              .height(30)
+              .borderRadius(15)
+              .onClick(() => {
+                this.inputText = item
+              })
+          })
+        }
+        .padding({left: 16, right: 16})
+      } else {
+        OptionalList({
+          isRefreshing: this.isRefresh,
+          keyword: this.inputText,
+          questionBankType: this.activeIndex == 0 ? ContentType.Question : ContentType.Interview
         })
       }
-      .padding({left: 16, right: 16})
     }
     .height('100%')
     .width('100%')

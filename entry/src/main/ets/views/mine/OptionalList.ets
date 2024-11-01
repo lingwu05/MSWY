@@ -1,8 +1,11 @@
 import { http } from '../../common/utils/HttpRequest'
-import { InterviewItem, PageData, QuestionItem, SortType } from '../../models'
+import { InterviewItem, PageData, QuestionItem, QuestionPageParams, SortType } from '../../models'
 import promptAction from '@ohos.promptAction'
 import {ContentType } from '../../pages/OptionalPage'
 import { QuestionItemComp } from '../../common/components/QuestionItemComp'
+import { auth } from '../../common/utils/Index'
+import { RouterOptions } from '@kit.ArkUI'
+import { InterviewItemComp } from '../../common/components/InterviewItemComp'
 
 @Component
 export struct OptionalList {
@@ -15,17 +18,28 @@ export struct OptionalList {
   @Prop isLoading: boolean = false
   @Prop isFinish: boolean = false
   @State activeIndex: number = 0
+  @Prop keyword: string = ''
 
   scroller: Scroller = new Scroller()
 
   async getData() {
-    return await http.request<PageData<InterviewItem>>({
-      url: 'question/opt/list',
-      params: {
-        optType: this.optType,
-        questionBankType: this.questionBankType
-      }
-    })
+    if (this.keyword) {
+      return await http.request<PageData<InterviewItem>>({
+        url: 'question/list',
+        params: {
+          questionBankType: this.questionBankType,
+          keyword: this.keyword
+        }
+      })
+    } else {
+      return await http.request<PageData<InterviewItem>>({
+        url: 'question/opt/list',
+        params: {
+          optType: this.optType,
+          questionBankType: this.questionBankType
+        }
+      })
+    }
   }
 
   @Builder loadingMoreBuilder() {
@@ -53,63 +67,6 @@ export struct OptionalList {
     }
     .height(80)
     .margin({bottom: 80})
-  }
-
-  @Builder contentBuilder(item: InterviewItem) {
-    Column({space: 10}) {
-      Row() {
-        Image(item.creatorAvatar)
-          .width(35)
-          .margin({right: 10})
-        Column({space: 5}) {
-          Text(item.stem)
-            .fontSize(15)
-            .fontWeight(600)
-            .textOverflow({overflow: TextOverflow.Ellipsis})
-            .maxLines(2)
-          Text(item.creatorName + ' . ' + item.createdAt)
-            .fontSize(12)
-            .fontColor('#9c9c9c')
-        }
-        .alignItems(HorizontalAlign.Start)
-        Blank()
-          .layoutWeight(1)
-        Image($r('app.media.ic_interview_more'))
-          .width(20)
-      }
-      .alignItems(VerticalAlign.Top)
-      Text(item.content)
-        .fontSize(13)
-        .fontWeight(500)
-        .textOverflow({overflow: TextOverflow.Ellipsis})
-        .maxLines(2)
-        .fontColor('#666')
-      Row({space: 3}) {
-        ForEach(['大厂', '面经'], (tag: string) => {
-          Text(tag)
-            .fontColor('#79bca4')
-            .fontSize(12)
-            .width(36)
-            .height(20)
-            .backgroundColor('#f3f4f6')
-            .textAlign(TextAlign.Center)
-            .borderRadius(4)
-        })
-      }
-      .width('100%')
-      Row() {
-        Text('点赞 ' + item.likeCount + ' · 浏览 ' + item.views)
-          .fontColor('#9c9c9c')
-          .fontSize(12)
-      }
-      .width('100%')
-    }
-    .width('100%')
-    .padding(10)
-    .borderWidth({
-      bottom: 1
-    })
-    .borderColor('#f6f6f6')
   }
 
   async onLoad() {
@@ -151,8 +108,21 @@ export struct OptionalList {
           ListItem() {
             if (this.questionBankType == ContentType.Question) {
               QuestionItemComp({item: item as QuestionItem})
+                .onClick(() => {
+                  auth.checkAuth({
+                    url: '/pages/QuestionPage'.slice(1),
+                    params: {
+                      item: item as QuestionItem,
+                      index: index,
+                      list: this.list
+                    } as QuestionPageParams
+                  })
+                })
             } else {
-              this.contentBuilder(item as InterviewItem)
+              InterviewItemComp({item: item as InterviewItem})
+              .onClick(() => {
+
+              })
             }
           }
         })
