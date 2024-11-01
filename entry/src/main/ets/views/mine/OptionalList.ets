@@ -1,5 +1,5 @@
 import { http } from '../../common/utils/HttpRequest'
-import { InterviewItem, PageData, QuestionItem, QuestionPageParams, SortType } from '../../models'
+import { InterviewItem, InterviewPageParams, PageData, QuestionItem, QuestionPageParams, SortType } from '../../models'
 import promptAction from '@ohos.promptAction'
 import {ContentType } from '../../pages/OptionalPage'
 import { QuestionItemComp } from '../../common/components/QuestionItemComp'
@@ -9,7 +9,7 @@ import { InterviewItemComp } from '../../common/components/InterviewItemComp'
 
 @Component
 export struct OptionalList {
-  @State list: (InterviewItem | QuestionItem)[] = []
+  @Prop list: (InterviewItem | QuestionItem)[] = []
   @Prop questionBankType: ContentType = ContentType.Question
   @Prop optType: number
   @Prop sort: SortType = SortType.Default
@@ -24,21 +24,43 @@ export struct OptionalList {
 
   async getData() {
     if (this.keyword) {
-      return await http.request<PageData<InterviewItem>>({
-        url: 'question/list',
-        params: {
-          questionBankType: this.questionBankType,
-          keyword: this.keyword
-        }
-      })
+      if (this.questionBankType == ContentType.Question) {
+        return await http.request<PageData<QuestionItem>>({
+          url: 'question/list',
+          params: {
+            questionBankType: ContentType.Question,
+            keyword: this.keyword
+          }
+        })
+      } else {
+        return await http.request<PageData<InterviewItem>>({
+          url: 'question/list',
+          params: {
+            questionBankType: ContentType.Interview,
+            keyword: this.keyword
+          }
+        })
+      }
+
     } else {
-      return await http.request<PageData<InterviewItem>>({
-        url: 'question/opt/list',
-        params: {
-          optType: this.optType,
-          questionBankType: this.questionBankType
-        }
-      })
+      if (this.questionBankType == ContentType.Question) {
+        return await http.request<PageData<QuestionItem>>({
+          url: 'question/opt/list',
+          params: {
+            optType: this.optType,
+            questionBankType: ContentType.Question
+          }
+        })
+      } else {
+        return await http.request<PageData<InterviewItem>>({
+          url: 'question/opt/list',
+          params: {
+            optType: this.optType,
+            questionBankType: ContentType.Interview
+          }
+        })
+      }
+
     }
   }
 
@@ -120,9 +142,14 @@ export struct OptionalList {
                 })
             } else {
               InterviewItemComp({item: item as InterviewItem})
-              .onClick(() => {
-
-              })
+                .onClick(() => {
+                  auth.checkAuth({
+                    url: '/pages/InterviewPage'.slice(1),
+                    params: {
+                      item: item as InterviewItem,
+                    } as InterviewPageParams
+                  })
+                })
             }
           }
         })

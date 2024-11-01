@@ -63,6 +63,7 @@ export interface InterviewItem {
   createdAt: string
   stage: string[]
   likeFlag: 0 | 1 | null
+  collectFlag: 0 | 1 | null
   relatedQuestions: InterviewRelatedQuestion[] | null
 }
 
@@ -86,4 +87,8 @@ export interface QuestionPageParams {
   item: QuestionItem
   index: number
   list: QuestionItem[]
+}
+
+export interface InterviewPageParams {
+  item: InterviewItem
 }

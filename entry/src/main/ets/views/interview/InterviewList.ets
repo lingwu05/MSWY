@@ -1,6 +1,8 @@
 import { http } from '../../common/utils/HttpRequest'
-import { InterviewItem, PageData, SortType } from '../../models'
+import { InterviewItem, InterviewPageParams, PageData, SortType } from '../../models'
 import promptAction from '@ohos.promptAction'
+import { InterviewItemComp } from '../../common/components/InterviewItemComp'
+import { auth } from '../../common/utils/Index'
 
 @Component
 export struct InterviewList {
@@ -50,63 +52,6 @@ export struct InterviewList {
     .margin({bottom: 80})
   }
 
-  @Builder contentBuilder(item: InterviewItem) {
-    Column({space: 10}) {
-      Row() {
-        Image(item.creatorAvatar)
-          .width(35)
-          .margin({right: 10})
-        Column({space: 5}) {
-          Text(item.stem)
-            .fontSize(15)
-            .fontWeight(600)
-            .textOverflow({overflow: TextOverflow.Ellipsis})
-            .maxLines(2)
-          Text(item.creatorName + ' . ' + item.createdAt)
-            .fontSize(12)
-            .fontColor('#9c9c9c')
-        }
-        .alignItems(HorizontalAlign.Start)
-        Blank()
-          .layoutWeight(1)
-        Image($r('app.media.ic_interview_more'))
-          .width(20)
-      }
-      .alignItems(VerticalAlign.Top)
-      Text(item.content)
-        .fontSize(13)
-        .fontWeight(500)
-        .textOverflow({overflow: TextOverflow.Ellipsis})
-        .maxLines(2)
-        .fontColor('#666')
-      Row({space: 3}) {
-        ForEach(['大厂', '面经'], (tag: string) => {
-          Text(tag)
-            .fontColor('#79bca4')
-            .fontSize(12)
-            .width(36)
-            .height(20)
-            .backgroundColor('#f3f4f6')
-            .textAlign(TextAlign.Center)
-            .borderRadius(4)
-        })
-      }
-      .width('100%')
-      Row() {
-        Text('点赞 ' + item.likeCount + ' · 浏览 ' + item.views)
-          .fontColor('#9c9c9c')
-          .fontSize(12)
-      }
-      .width('100%')
-    }
-    .width('100%')
-    .padding(10)
-    .borderWidth({
-      bottom: 1
-    })
-    .borderColor('#f6f6f6')
-  }
-
   async onLoad() {
     const res = await this.getData()
     this.list.push(...res.rows)
@@ -142,7 +87,17 @@ export struct InterviewList {
       }) {
         ForEach(this.list, (item: InterviewItem, index) => {
           ListItem() {
-            this.contentBuilder(item)
+            InterviewItemComp({
+              item: item
+            })
+              .onClick(() => {
+                auth.checkAuth({
+                  url: '/pages/InterviewPage'.slice(1),
+                  params: {
+                    item: item
+                  } as InterviewPageParams
+                })
+              })
           }
         })
         this.loadingMoreBuilder()

@@ -32,7 +32,7 @@ export struct MyNavBar {
       }
       .height(56)
       .layoutWeight(1)
-      if (this.showBorder) {
+      if (this.showRightIcon) {
         Image(this.rightIcon)
           .width(24)
           .aspectRatio(1)

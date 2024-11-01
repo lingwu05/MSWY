@@ -2,6 +2,7 @@ import { searchHistory } from '../common/utils/SearchHistory';
 import { LengthMetrics, promptAction, router } from '@kit.ArkUI';
 import { OptionalList } from '../views/mine/OptionalList';
 import { ContentType } from './OptionalPage';
+import { InterviewItem, QuestionItem } from '../models';
 
 @Entry
 @Component
@@ -11,6 +12,7 @@ struct SearchPage {
   @State keywordList: string[] = []
   @State inputText: string = ''
   @State isRefresh: boolean = false
+  @State list: (InterviewItem | QuestionItem)[] = []
 
   aboutToAppear(): void {
     this.keywordList = searchHistory.read('keyword')
@@ -31,6 +33,8 @@ struct SearchPage {
     .onClick(() => {
       if (this.activeIndex != index) {
         this.activeIndex = index
+        this.list = []
+        this.isRefresh = true
       }
     })
   }
@@ -117,7 +121,8 @@ struct SearchPage {
         OptionalList({
           isRefreshing: this.isRefresh,
           keyword: this.inputText,
-          questionBankType: this.activeIndex == 0 ? ContentType.Question : ContentType.Interview
+          questionBankType: this.activeIndex == 0 ? ContentType.Question : ContentType.Interview,
+          list: this.list
         })
       }
     }

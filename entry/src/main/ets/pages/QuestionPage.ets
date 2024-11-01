@@ -7,14 +7,14 @@ import { auth, http } from '../common/utils/Index';
 import { LoadingDialog } from '../common/components/LoadingDialog';
 import { ShareDialog } from '../common/components/ShareDialog';
 
-interface ResponseType {
+export interface ResponseType {
   success: boolean
   code: number
   message: string
   data: object
 }
 
-interface RequestParams {
+export interface RequestParams {
   id: string
   type: number
   optType: number
