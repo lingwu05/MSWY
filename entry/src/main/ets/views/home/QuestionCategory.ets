@@ -19,6 +19,7 @@ export struct QuestionCategory {
   @State questionTypeList: QuestionType[] = []
   @State activeIndex: number = 0
   @State isShow: boolean = false
+  @State isRefresh:boolean = false
   @State filterParam: FilterParam = {
     index: 0,
     difficulty: 0,
@@ -123,6 +124,7 @@ export struct QuestionCategory {
           .onClick(()=>{
             this.isShow = false
             this.activeIndex = this.filterParam.index
+            this.isRefresh = true
           })
       }
       .width('100%')
@@ -152,7 +154,7 @@ export struct QuestionCategory {
               this.filterParam.sortValue = 21
             }
             else if (this.filterParam.sortValue == 21) {
-              this.filterParam.sortValue = 20
+              this.filterParam.sortValue = 0
             }
           })
       }
@@ -209,7 +211,8 @@ export struct QuestionCategory {
             TabContent() {
               QuestionList({
                 typeId: item.id,
-                sort: this.filterParam.sortValue
+                sort: this.filterParam.sortValue,
+                isRefreshing: this.isRefresh
               })
             }
             .tabBar(this.tabBarBuilder(item, index))

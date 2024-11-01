@@ -6,7 +6,7 @@ import { promptAction } from "@kit.ArkUI"
 @Preview
 @Component
 export struct QuestionList {
-  @Prop isRefreshing: boolean = false
+  @Link isRefreshing: boolean
   @Prop isLoading: boolean = false // 正在加载内容
   @Prop isFinish: boolean = false // 加载完成
   @Prop list: QuestionItem[] = []

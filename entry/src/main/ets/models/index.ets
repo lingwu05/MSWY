@@ -92,3 +92,18 @@ export interface QuestionPageParams {
 export interface InterviewPageParams {
   item: InterviewItem
 }
+
+export interface TagParams {
+  tagName: string
+  nameColor: string
+  borderColor: string
+}
+
+export interface ProjectItem {
+  id: number
+  name: string
+  icon: ResourceStr
+  describeInfo: string
+  displayNewestFlag: 0 | 1 | null
+  tags: TagParams[]
+}
