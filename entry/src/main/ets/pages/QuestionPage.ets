@@ -20,6 +20,23 @@ export interface RequestParams {
   optType: number
 }
 
+// 访问时长数据埋点接口要求的数据格式
+export interface iTimeItem {
+  /** 结束时间（毫秒） */
+  endTime: number;
+
+  /** 试题id */
+  questionId: string;
+
+  /** 开始时间(毫秒) */
+  startTime: number;
+}
+
+// 上报访问时长接口的body参数类型
+export interface iTimeBody {
+  timeList: iTimeItem[]
+}
+
 @Entry
 @Component
 struct QuestionPage {
@@ -27,6 +44,7 @@ struct QuestionPage {
   @State isLoading: boolean = false
   @State questionIdex: number = 0
   @State list: QuestionItem[] = []
+  timeItem: iTimeItem = {} as iTimeItem
 
   loadingdialog: CustomDialogController = new CustomDialogController({
     builder: LoadingDialog({ message: '加载中...' }),
@@ -59,8 +77,31 @@ struct QuestionPage {
     }
   }
 
+  aboutToDisappear(): void {
+    this.endRecordTime()
+  }
+
+  startRecordTime() {
+    this.timeItem.questionId = this.item.id
+    this.timeItem.startTime = Date.now()
+  }
+
+  async endRecordTime() {
+    this.timeItem.endTime =Date.now()
+    await http.request<QuestionDetail>({
+      url: `time/tracking`,
+      method: 'post',
+      data: {
+        timeList: [this.timeItem]
+      }
+    })
+    promptAction.showToast({ message: '数据上报完成' })
+  }
+
   async getQuestionDetail (id: string) {
-    return await http.request<QuestionDetail>({ url: `question/${id}` })
+    const res = await http.request<QuestionDetail>({ url: `question/${id}` })
+    this.startRecordTime()
+    return res
   }
 
   build() {
@@ -212,6 +253,7 @@ struct QuestionPage {
             if (this.questionIdex != 0) {
               this.loadingdialog.open()
               --this.questionIdex
+              this.endRecordTime()
               this.item = await this.getQuestionDetail(this.list[this.questionIdex].id)
               this.loadingdialog.close()
             }
@@ -229,6 +271,7 @@ struct QuestionPage {
             if (this.questionIdex != this.list.length - 1) {
               this.loadingdialog.open()
               ++this.questionIdex
+              this.endRecordTime()
               this.item = await this.getQuestionDetail(this.list[this.questionIdex].id)
               this.loadingdialog.close()
             }
