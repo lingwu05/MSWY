@@ -28,7 +28,8 @@ export struct QuestionList {
     })
   }
 
-  @Builder loadingMoreBuilder() {
+  @Builder
+  loadingMoreBuilder() {
     ListItem() {
       if (this.isLoading) {
         Row({space: 5}) {

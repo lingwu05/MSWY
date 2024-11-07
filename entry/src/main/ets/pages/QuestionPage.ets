@@ -6,6 +6,7 @@ import { promptAction, router } from '@kit.ArkUI';
 import { auth, http } from '../common/utils/Index';
 import { LoadingDialog } from '../common/components/LoadingDialog';
 import { ShareDialog } from '../common/components/ShareDialog';
+import { preferences } from '@kit.ArkData';
 
 export interface ResponseType {
   success: boolean
@@ -88,14 +89,24 @@ struct QuestionPage {
 
   async endRecordTime() {
     this.timeItem.endTime =Date.now()
-    await http.request<QuestionDetail>({
-      url: `time/tracking`,
-      method: 'post',
-      data: {
-        timeList: [this.timeItem]
-      }
-    })
-    promptAction.showToast({ message: '数据上报完成' })
+    const trackFile = preferences.getPreferencesSync(getContext(this), {name: 'track'})
+    const list = trackFile.getSync('list', []) as iTimeItem[]
+    list.push(this.timeItem)
+    if (list.length >= 5) {
+      await http.request<QuestionDetail>({
+        url: `time/tracking`,
+        method: 'post',
+        data: {
+          timeList: list
+        }
+      })
+      promptAction.showToast({ message: '数据上报完成' })
+      trackFile.put('list', [])
+      trackFile.flush()
+    } else {
+      trackFile.put('list', list)
+      trackFile.flush()
+    }
   }
 
   async getQuestionDetail (id: string) {
