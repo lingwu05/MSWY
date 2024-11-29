@@ -2,10 +2,27 @@ import { MyNavBar } from "../../common/components/MyNavBar"
 import { audioDB, InterviewAudioItem } from "../../common/utils/AudioDB"
 import { AudioItemComp } from "./AudioItemComp"
 import { AudioRecordComp } from "./AudioRecordComp"
+import { InputDialog } from "./InputDialog"
 
 @Component
 export struct AudioView {
   @State list: InterviewAudioItem[] = [{} as InterviewAudioItem, {} as InterviewAudioItem ]
+
+  currentItem: InterviewAudioItem = {} as InterviewAudioItem
+
+  dialog = new CustomDialogController({
+    builder: InputDialog({
+      name: this.currentItem.name,
+      onSubmit: async (name) => {
+        this.currentItem.name = name
+        audioDB.update(this.currentItem)
+        this.list = audioDB.getAllData()
+        this.dialog.close()
+      }
+    }),
+    customStyle: true,
+    alignment: DialogAlignment.Center
+  })
 
   async aboutToAppear() {
     await audioDB.createStore()
@@ -19,6 +36,10 @@ export struct AudioView {
     Row() {
       Text('编辑')
         .actionButton($r('app.color.common_blue'))
+        .onClick(() => {
+          this.currentItem = item
+          this.dialog.open()
+        })
       Text('删除')
         .actionButton('#FF0033')
         .onClick(async () => {
