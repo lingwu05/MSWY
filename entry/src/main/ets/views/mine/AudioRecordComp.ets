@@ -1,6 +1,9 @@
 import { media } from '@kit.MediaKit'
 import { fileIo } from '@kit.CoreFileKit'
+import { InterviewAudioItem } from '../../common/utils/AudioDB'
+import { auth } from '../../common/utils/Auth'
 
+@Preview
 @Component
 export struct AudioRecordComp {
   @StorageProp('bottomHeight') bottomHeight: number = 0
@@ -10,6 +13,10 @@ export struct AudioRecordComp {
   filePath?: string
   timer?: number
   @State maxAmplitude: number = 0
+  @State recording: boolean = false
+  startTime: number = 0
+
+  onRecordEnd: (item: InterviewAudioItem) => void = () => {}
 
   async startRecord() {
     // 1. 准备一个文件接收录音
@@ -60,7 +67,24 @@ export struct AudioRecordComp {
           .aspectRatio(1)
           .fillColor($r('app.color.white'))
           .onClick(async () => {
-            // TODO 开始和停止录音
+            if (this.recording) {
+              await this.stopRecord()
+              this.recording = false
+              const stat = fileIo.statSync(this.filePath)
+              this.onRecordEnd({
+                id: null,
+                name:Date.now().toString(),
+                path  : this.filePath || '',
+                duration:  Date.now() - this.startTime,
+                size: stat.size,
+                user_id: auth.getUser().id,
+                create_time: Date.now()
+              })
+            } else {
+              await this.startRecord()
+              this.recording = true
+              this.startTime = Date.now()
+            }
           })
       }
       .justifyContent(FlexAlign.Center)
