@@ -1,6 +1,7 @@
 import { MyNavBar } from "../../common/components/MyNavBar"
 import { audioDB, InterviewAudioItem } from "../../common/utils/AudioDB"
 import { AudioItemComp } from "./AudioItemComp"
+import { AudioPlayer } from "./AudioPlayer"
 import { AudioRecordComp } from "./AudioRecordComp"
 import { InputDialog } from "./InputDialog"
 
@@ -24,9 +25,18 @@ export struct AudioView {
     alignment: DialogAlignment.Center
   })
 
+  @State isShow: boolean = false
+
+
+  @Builder
+  PlayerBuilder() {
+    Column() {
+      AudioPlayer({ item: this.currentItem })
+    }
+  }
+
   async aboutToAppear() {
     await audioDB.createStore()
-
     this.list = audioDB.getAllData()
   }
 
@@ -64,6 +74,10 @@ export struct AudioView {
             .swipeAction({
               end: this.ListItemSwiperBuilder(item)
             })
+            .onClick(() => {
+              this.currentItem = item
+              this.isShow = true
+            })
           })
         }
         .width('100%')
@@ -79,6 +93,7 @@ export struct AudioView {
         }
       })
     }
+    .bindContentCover($$this.isShow, this.PlayerBuilder())
     .width('100%')
     .height('100%')
   }
