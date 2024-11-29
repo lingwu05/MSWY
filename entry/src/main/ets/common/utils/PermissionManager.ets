@@ -24,6 +24,8 @@ class PermissionManager {
     // 返回 Promise 授权结果
     return isAuth ? Promise.resolve(true) : Promise.reject(false)
   }  // 打开系统设置的权限管理页（处理授权结果）
+
+
   openPermissionSettingsPage() {
     // 获取上下文
     const context = getContext() as common.UIAbilityContext

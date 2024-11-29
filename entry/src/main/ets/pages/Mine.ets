@@ -189,7 +189,9 @@ export struct Mine {
                 url: '/pages/DevWord'.slice(1)
               })
             } else if (it.text == '面试录音') {
-
+              auth.checkAuth({
+                url: '/pages/AudioPage'.slice(1)
+              })
             } else if (it.text == '推荐分享') {
 
             } else if (it.text == '关于我们') {

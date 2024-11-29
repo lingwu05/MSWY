@@ -18,6 +18,7 @@
     "test/TextPage",
     "pages/InterviewPage",
     "pages/ProjectPage",
-    "test/Test2"
+    "test/Test2",
+    "pages/AudioPage"
   ]
 }
