@@ -27,6 +27,10 @@
     {
       "name": "SecondAbility_label",
       "value": "label"
+    },
+    {
+      "name": "reason_microphone",
+      "value": "面试录音权限"
     }
   ]
 }

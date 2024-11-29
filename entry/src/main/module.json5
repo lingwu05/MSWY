@@ -13,6 +13,11 @@
     "requestPermissions": [
       {
         "name": "ohos.permission.INTERNET"
+      },
+      {
+        "name": "ohos.permission.MICROPHONE",
+        "usedScene": {},
+        "reason": "$string:reason_microphone"  // 将来会自动显示在界面上告知用户
       }
     ],
     "deliveryWithInstall": true,
