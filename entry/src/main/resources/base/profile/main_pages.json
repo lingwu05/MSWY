@@ -15,10 +15,10 @@
     "pages/OptionalPage",
     "pages/QuestionPage",
     "pages/SearchPage",
-    "test/TextPage",
     "pages/InterviewPage",
     "pages/ProjectPage",
-    "test/Test2",
-    "pages/AudioPage"
+    "pages/AudioPage",
+    "pages/Settings",
+    "pages/Profile"
   ]
 }

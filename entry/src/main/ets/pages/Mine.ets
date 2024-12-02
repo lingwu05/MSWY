@@ -197,7 +197,9 @@ export struct Mine {
             } else if (it.text == '关于我们') {
 
             } else if (it.text == '设置') {
-
+              auth.checkAuth({
+                url: '/pages/Settings'.slice(1)
+              })
             }
           })
         })
